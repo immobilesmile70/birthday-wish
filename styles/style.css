@@ -1,0 +1,335 @@
+:root {
+  --primary: #ff7091;
+  --primary-glow: rgba(255, 77, 109, 0.4);
+  --secondary: #7209b7;
+  --accent: #ff4d6d;
+  --bg-dark: #0a0a0c;
+  --text-main: #000000;
+  --text-dim: rgb(249 9 255 / 77%);
+  --glass: linear-gradient(-35deg, #9a55ff5e, #b6ff2f40);
+  --glass-border: #ff6b6b;
+  --font-body: 'Poppins', sans-serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+#router-view {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 600px;
+  max-height: 100%;
+}
+
+#app {
+  width: 100dvw;
+  padding: 2rem;
+  z-index: 1;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glass-container {
+  display: grid;
+  background: var(--glass);
+  backdrop-filter: blur(7px);
+  border: 1px dashed var(--glass-border);
+  border-radius: 30px;
+  padding: 2rem 1rem;
+  text-align: center;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+  min-height: 100px;
+  max-height: 800px;
+  overflow: hidden auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ff1c1c3b transparent;
+  scrollbar-gutter: both-edges stable;
+  animation: slideUp 1s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.badge {
+  display: inline-block;
+  background: rgb(255 100 236 / 7%);
+  padding: 0.5rem 1rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: 1px solid var(--glass-border);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.title {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2rem, 10vw, 3rem);
+  font-weight: 800;
+  background: linear-gradient(to bottom, #ff9e9e, rgb(250 52 255 / 77%));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.message {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn {
+  position: relative;
+  padding: 1.2rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-body);
+  overflow: hidden;
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn:hover {
+  box-shadow: 0 0 25px 0px var(--primary-glow);
+  transform: scale(1.05);
+}
+
+.btn:active {
+  box-shadow: 0 0 0 transparent;
+  transform: scale(0.95);
+}
+
+@media (max-width: 480px) {
+  .glass-container {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .title {
+    font-size: 2.8rem;
+  }
+}
+
+/* --- Utilities --- */
+.hidden {
+  display: none !important;
+}
+
+.fade-in {
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Form Styles --- */
+#create-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input-group {
+  text-align: left;
+  width: 100%;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--accent);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 0.8rem;
+  background: rgb(255 100 142 / 30%);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(255, 77, 109, 0.1);
+}
+
+.form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* --- Letter/Description Styles --- */
+.letter-container {
+  margin-top: 1rem;
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+}
+
+.letter-folded {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px dashed var(--glass-border);
+  transition: all 0.3s ease;
+}
+
+.letter-folded:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.letter-content {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2rem;
+  line-height: 1.6;
+  color: #f300ff;
+  padding: 1rem;
+  background: linear-gradient(to bottom right, rgb(255 154 169 / 46%), rgb(251 255 43 / 20%));
+  border-radius: 8px;
+  border-left: 4px solid var(--primary);
+}
+
+.tap-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+  opacity: 0.7;
+}
+
+/* --- Share Button --- */
+#share-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+#share-btn:hover {
+  background: var(--primary);
+  transform: translateY(-3px) rotate(10deg);
+}
+
+#share-btn svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* --- Toast --- */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 80px;
+  background: var(--bg-dark);
+  color: var(--primary);
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  border: 1px solid var(--primary);
+  font-weight: 600;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  z-index: 101;
+}
+
+.toast.hidden {
+  transform: translateY(20px);
+  opacity: 0;
+  pointer-events: none;
+}
