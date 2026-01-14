@@ -1,16 +1,15 @@
 import confetti from 'canvas-confetti';
 import { inject } from '@vercel/analytics';
 import { injectSpeedInsights } from '@vercel/speed-insights';
+import { InteractionParticles } from './interaction-particles.js';
 
-// Initialize Vercel Analytics and Speed Insights
+new InteractionParticles();
+
 inject();
 injectSpeedInsights();
 
-// DOM Elements
 const app = document.getElementById('router-view');
 const toast = document.getElementById('toast');
-
-// --- State & Router ---
 
 function init() {
     const params = new URLSearchParams(window.location.search);
@@ -25,8 +24,6 @@ function init() {
         document.title = "Birthday Wish";
     }
 }
-
-// --- View: Create Mode ---
 
 function renderCreateMode() {
     app.innerHTML = `
@@ -70,8 +67,6 @@ function renderCreateMode() {
     });
 }
 
-// --- View: View Mode (Birthday Wish) ---
-
 function renderViewMode(name, description) {
     app.innerHTML = `
         <div class="glass-container">
@@ -101,25 +96,19 @@ function renderViewMode(name, description) {
         </div>
     `;
 
-    // Event Listeners
     setupInteractions();
 }
 
-// --- Actions & Helpers ---
-
 function setupInteractions() {
-    // 1. Celebrate Button
     const celebrateBtn = document.getElementById('celebrate-btn');
     celebrateBtn.addEventListener('click', () => {
         triggerConfetti();
         playMusic();
 
-        // Button Pulse
         celebrateBtn.style.transform = 'scale(0.95)';
         setTimeout(() => celebrateBtn.style.transform = '', 100);
     });
 
-    // 2. Letter/Description Toggle
     const letterTrigger = document.getElementById('letter-trigger');
     const hiddenMsg = document.getElementById('hidden-message');
     const letterIcon = document.getElementById('letter-icon');
@@ -138,7 +127,6 @@ function setupInteractions() {
 }
 
 function triggerConfetti() {
-    // Blast confetti!
     confetti({
         particleCount: 150,
         spread: 70,
@@ -146,7 +134,6 @@ function triggerConfetti() {
         colors: ['#ff4d6d', '#7209b7', '#4cc9f0']
     });
 
-    // Side cannons
     const duration = 3 * 1000;
     const end = Date.now() + duration;
 
@@ -197,5 +184,4 @@ function escapeHtml(text) {
         .replace(/'/g, "&#039;");
 }
 
-// Start
 init();
