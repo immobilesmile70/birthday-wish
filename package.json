@@ -1,7 +1,7 @@
 {
   "name": "birthday-wish",
   "version": "1.0.0",
-  "description": "",
+  "description": "A premium, interactive birthday wishing experience with beautiful animations and glassmorphism.",
   "main": "index.js",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,7 @@
     "@vercel/analytics": "^1.6.1",
     "@vercel/speed-insights": "^1.3.1",
     "canvas-confetti": "^1.9.4",
+    "terser": "^5.44.1",
     "vite": "^7.3.1"
   }
 }

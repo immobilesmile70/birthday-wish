@@ -30,7 +30,7 @@ function init() {
 
 function renderCreateMode() {
     app.innerHTML = `
-        <div class="glass-container fade-in">
+        <div class="glass-container">
             <div class="content">
                 <div class="badge">Create a Wish</div>
                 <h1 class="title">Birthday Wish</h1>
@@ -74,7 +74,7 @@ function renderCreateMode() {
 
 function renderViewMode(name, description) {
     app.innerHTML = `
-        <div class="glass-container fade-in">
+        <div class="glass-container">
             <div class="content">
                 <div class="badge">Celebration Time</div>
                 <h1 class="title">Happy Birthday, <br>${escapeHtml(name)}!</h1>
@@ -99,10 +99,6 @@ function renderViewMode(name, description) {
                 </div>
             </div>
         </div>
-        
-        <button id="share-btn" title="Copy Link">
-            <svg viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-        </button>
     `;
 
     // Event Listeners
@@ -134,18 +130,10 @@ function setupInteractions() {
         if (!isOpen) {
             hiddenMsg.classList.remove('hidden');
             hiddenMsg.classList.add('fade-in');
-            letterIcon.innerHTML = '✨';
+            letterIcon.style.display = 'none';
             tapHint.style.display = 'none';
             isOpen = true;
         }
-    });
-
-    // 3. Share Button
-    const shareBtn = document.getElementById('share-btn');
-    shareBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            showToast();
-        });
     });
 }
 

@@ -6,7 +6,7 @@
   --bg-dark: #0a0a0c;
   --text-main: #000000;
   --text-dim: rgb(249 9 255 / 77%);
-  --glass: linear-gradient(-35deg, #9a55ff5e, #b6ff2f40);
+  --glass: linear-gradient(-35deg, #ee47ff5e, #ffed2f3b);
   --glass-border: #ff6b6b;
   --font-body: 'Poppins', sans-serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -19,7 +19,6 @@
 
 body {
   font-family: var(--font-body);
-  background-color: var(--bg-dark);
   color: var(--text-main);
   min-height: 100vh;
   display: flex;
@@ -27,15 +26,10 @@ body {
   justify-content: center;
   overflow: hidden;
   position: relative;
-}
-
-.background {
-  position: absolute;
-  width: 100%;
+  background: url("/background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  z-index: -1;
 }
 
 .content {
@@ -43,6 +37,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
+  height: fit-content;
   gap: 20px;
 }
 
@@ -54,6 +50,8 @@ body {
   justify-content: center;
   max-width: 600px;
   max-height: 100%;
+  perspective-origin: bottom;
+  perspective: 150px;
 }
 
 #app {
@@ -67,14 +65,13 @@ body {
 }
 
 .glass-container {
-  display: grid;
+  display: flex;
   background: var(--glass);
-  backdrop-filter: blur(7px);
+  backdrop-filter: blur(10px);
   border: 1px dashed var(--glass-border);
   border-radius: 30px;
   padding: 2rem 1rem;
   text-align: center;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   width: 100%;
   height: 100%;
   min-height: 100px;
@@ -83,23 +80,26 @@ body {
   scrollbar-width: thin;
   scrollbar-color: #ff1c1c3b transparent;
   scrollbar-gutter: both-edges stable;
-  animation: slideUp 1s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
+  animation: slideUp 2.5s linear(0 0%, 0 1.8%, 0.01 3.6%, 0.03 6.35%, 0.07 9.1%, 0.13 11.4%, 0.19 13.4%, 0.27 15%, 0.34 16.1%, 0.54 18.35%, 0.66 20.6%, 0.72 22.4%, 0.77 24.6%, 0.81 27.3%, 0.85 30.4%, 0.88 35.1%, 0.92 40.6%, 0.94 47.2%, 0.96 55%, 0.98 64%, 0.99 74.4%, 1 86.4%, 1 100%);
 }
 
 @keyframes slideUp {
   from {
-    opacity: 0;
-    transform: translateY(40px);
+    opacity: 0.3;
+    transform: scale(0.6) rotateX(18deg);
+    box-shadow: 0 0 0 0 transparent;
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1) rotateX(0);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   }
 }
 
 .badge {
-  display: inline-block;
+  display: block;
   background: rgb(255 100 236 / 7%);
   padding: 0.5rem 1rem;
   border-radius: 15px;
@@ -156,16 +156,6 @@ body {
 .btn:active {
   box-shadow: 0 0 0 transparent;
   transform: scale(0.95);
-}
-
-@media (max-width: 480px) {
-  .glass-container {
-    padding: 2.5rem 1.5rem;
-  }
-
-  .title {
-    font-size: 2.8rem;
-  }
 }
 
 /* --- Utilities --- */
@@ -246,12 +236,13 @@ body {
   position: relative;
   cursor: pointer;
   width: 100%;
+  max-width: 500px;
 }
 
 .letter-folded {
   background: rgba(255, 255, 255, 0.1);
   padding: 1.5rem;
-  border-radius: 12px;
+  border-radius: 25px;
   border: 1px dashed var(--glass-border);
   transition: all 0.3s ease;
 }
@@ -263,11 +254,13 @@ body {
 .letter-content {
   font-family: 'Great Vibes', cursive;
   font-size: 2rem;
+  font-weight: 400;
   line-height: 1.6;
-  color: #f300ff;
+  color: #ef00ff;
+  word-wrap: break-word;
   padding: 1rem;
   background: linear-gradient(to bottom right, rgb(255 154 169 / 46%), rgb(251 255 43 / 20%));
-  border-radius: 8px;
+  border-radius: 20px;
   border-left: 4px solid var(--primary);
 }
 
@@ -278,58 +271,33 @@ body {
   opacity: 0.7;
 }
 
-/* --- Share Button --- */
-#share-btn {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 100;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
+@media (max-width: 480px) {
+  #app {
+    padding: 1.5rem;
+  }
 
-#share-btn:hover {
-  background: var(--primary);
-  transform: translateY(-3px) rotate(10deg);
-}
+  .glass-container,
+  .letter-folded {
+    padding: 1rem;
+  }
 
-#share-btn svg {
-  width: 24px;
-  height: 24px;
-  fill: currentColor;
-}
+  .title {
+    font-size: 2.25rem;
+  }
 
-/* --- Toast --- */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 80px;
-  background: var(--bg-dark);
-  color: var(--primary);
-  padding: 0.8rem 1.5rem;
-  border-radius: 50px;
-  border: 1px solid var(--primary);
-  font-weight: 600;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-  transform: translateY(0);
-  opacity: 1;
-  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  z-index: 101;
-}
+  .badge {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6rem;
+    font-weight: 900;
+  }
 
-.toast.hidden {
-  transform: translateY(20px);
-  opacity: 0;
-  pointer-events: none;
+  .btn {
+    padding: 0.6rem 1.25rem;
+    border-radius: 16px;
+    font-size: 0.9rem;
+  }
+
+  .letter-content {
+    font-size: 1.5rem;
+  }
 }
