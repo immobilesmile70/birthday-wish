@@ -6,19 +6,21 @@ new InteractionParticles();
 
 inject();
 
+const throbberHTML = `<svg stroke="var(--primary)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3" stroke-linecap="round"><animate attributeName="stroke-dasharray" dur="1.5s" calcMode="spline" values="0 150;42 150;42 150;42 150" keyTimes="0;0.475;0.95;1" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" repeatCount="indefinite"></animate><animate attributeName="stroke-dashoffset" dur="1.5s" calcMode="spline" values="0;-16;-59;-59" keyTimes="0;0.475;0.95;1" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" repeatCount="indefinite"></animate></circle><animateTransform attributeName="transform" type="rotate" dur="2s" values="0 12 12;360 12 12" repeatCount="indefinite"></animateTransform></g></svg>`;
+
 const app = document.getElementById('router-view');
-const toast = document.getElementById('toast');
 
 async function init() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
     const name = params.get('name');
     const description = params.get('description');
+    const sender = params.get('sender');
 
     if (id) {
         await fetchWish(id);
     } else if (name && description) {
-        renderViewMode(name, description);
+        renderViewMode(name, description, sender);
         document.title = `Happy Birthday, ${name}!`;
     } else {
         renderCreateMode();
@@ -35,7 +37,7 @@ async function fetchWish(id) {
             throw new Error('Failed to load wish');
         }
         const data = await res.json();
-        renderViewMode(data.name, data.description);
+        renderViewMode(data.name, data.description, data.sender);
         document.title = `Happy Birthday, ${data.name}!`;
     } catch (err) {
         renderError(err.message);
@@ -46,9 +48,22 @@ function renderLoading() {
     app.innerHTML = `
         <div class="glass-container" style="text-align: center; min-height: 300px; display: flex; align-items: center; justify-content: center;">
             <div class="content">
-                <div class="loading-spinner"></div>
-                <p class="message" style="margin-top: 1rem;">Unwrapping the wish...</p>
+    <div style="
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+">
+                <div class="loading-spinner" style="
+    width: 30px;
+    height: 30px;
+"><svg stroke="var(--text-dim)" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g><circle cx="12" cy="12" r="9.5" fill="none" stroke-width="3" stroke-linecap="round"><animate attributeName="stroke-dasharray" dur="1.5s" calcMode="spline" values="0 150;42 150;42 150;42 150" keyTimes="0;0.475;0.95;1" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" repeatCount="indefinite"></animate><animate attributeName="stroke-dashoffset" dur="1.5s" calcMode="spline" values="0;-16;-59;-59" keyTimes="0;0.475;0.95;1" keySplines="0.42,0,0.58,1;0.42,0,0.58,1;0.42,0,0.58,1" repeatCount="indefinite"></animate></circle><animateTransform attributeName="transform" type="rotate" dur="2s" values="0 12 12;360 12 12" repeatCount="indefinite"></animateTransform></g></svg></div>
+                <p class="message" style="
+    font-size: 1.25rem;
+    font-weight: 600;
+">Unwrapping the wish...</p>
             </div>
+</div>
         </div>
     `;
 }
@@ -57,7 +72,7 @@ function renderError(message) {
     app.innerHTML = `
         <div class="glass-container" style="text-align: center;">
             <div class="content">
-                <h1 class="title">Oops!</h1>
+                <h1 class="title"><p>Oops!</p></h1>
                 <p class="message">${message}</p>
                 <button onclick="window.location.href='/'" class="btn primary" style="margin-top: 2rem;">
                     <span class="btn-text">Create a New Wish</span>
@@ -73,7 +88,7 @@ function renderCreateMode() {
         <div class="glass-container">
             <div class="content">
                 <div class="badge">Create a Wish</div>
-                <h1 class="title">Birthday Wish</h1>
+                <h1 class="title"><p>Birthday Wish</p></h1>
                 <p class="message">Create a birthday greeting for someone special ;)</p>
                 
                 <form id="create-form">
@@ -85,6 +100,11 @@ function renderCreateMode() {
                     <div class="input-group">
                         <label class="input-label" for="param-desc">Your Message</label>
                         <textarea id="param-desc" class="form-textarea" placeholder="Write something heartfelt..." required></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label" for="param-sender">Your Name</label>
+                        <input type="text" id="param-sender" class="form-input" placeholder="e.g. John" required>
                     </div>
 
                     <button type="submit" id="submit-btn" class="btn primary" style="width: 100%;">
@@ -103,17 +123,18 @@ function renderCreateMode() {
 
         const name = document.getElementById('param-name').value.trim();
         const description = document.getElementById('param-desc').value.trim();
+        const sender = document.getElementById('param-sender').value.trim();
 
-        if (!name || !description) return;
+        if (!name || !description || !sender) return;
 
         submitBtn.disabled = true;
-        btnText.textContent = 'Generating...';
+        btnText.textContent = `${throbberHTML} Generating...`;
 
         try {
             const res = await fetch('/api/create-wish', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, description })
+                body: JSON.stringify({ name, description, sender })
             });
 
             if (!res.ok) {
@@ -132,12 +153,12 @@ function renderCreateMode() {
     });
 }
 
-function renderViewMode(name, description) {
+function renderViewMode(name, description, sender) {
     app.innerHTML = `
         <div class="glass-container">
             <div class="content">
                 <div class="badge">Celebration Time</div>
-                <h1 class="title">Happy Birthday, <br>${escapeHtml(name)}!</h1>
+                <h1 class="title"><p>Happy Birthday, <br>${escapeHtml(name)}!</p></h1>
                 
                 <div class="actions">
                     <button id="celebrate-btn" class="btn primary">
@@ -153,6 +174,7 @@ function renderViewMode(name, description) {
                         <div id="hidden-message" class="hidden">
                             <div class="letter-content">
                                 ${escapeHtml(description).replace(/\n/g, '<br>')}
+                                ${sender ? `<div class="sender-name">— ${escapeHtml(sender)}</div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -238,13 +260,6 @@ function playMusic() {
     audio.play().catch(err => {
         console.log("Audio autoplay blocked or file missing:", err);
     });
-}
-
-function showToast() {
-    toast.classList.remove('hidden');
-    setTimeout(() => {
-        toast.classList.add('hidden');
-    }, 3000);
 }
 
 function escapeHtml(text) {

@@ -37,17 +37,17 @@ export default async function handler(request, response) {
             return response.status(429).json({ error: 'Too many requests' });
         }
 
-        const { name, description } = request.body;
+        const { name, description, sender } = request.body;
 
-        if (!name || !description) {
-            return response.status(400).json({ error: 'Name and description are required' });
+        if (!name || !description || !sender) {
+            return response.status(400).json({ error: 'Name, description, and sender are required' });
         }
 
         const { nanoid } = await import('nanoid');
         const id = nanoid(10);
         const key = `wish:${id}`;
 
-        await redis.set(key, JSON.stringify({ name, description }), {
+        await redis.set(key, JSON.stringify({ name, description, sender }), {
             EX: 259200
         });
 
