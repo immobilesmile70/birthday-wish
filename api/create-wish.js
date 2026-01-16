@@ -1,16 +1,21 @@
-import { Redis } from '@upstash/redis';
-import { Ratelimit } from '@upstash/ratelimit';
+import { createClient } from 'redis';
 import { nanoid } from 'nanoid';
 
-const redis = new Redis({
-    url: process.env.KV_REST_API_URL,
-    token: process.env.KV_REST_API_TOKEN,
+const client = createClient({
+    url: process.env.REDIS_URL
 });
 
-const ratelimit = new Ratelimit({
-    redis: redis,
-    limiter: Ratelimit.slidingWindow(5, '1 h'),
-});
+client.on('error', (err) => console.log('Redis Client Error', err));
+
+let isConnected = false;
+
+async function connectRedis() {
+    if (!isConnected) {
+        await client.connect();
+        isConnected = true;
+    }
+    return client;
+}
 
 export default async function handler(request, response) {
     if (request.method !== 'POST') {
@@ -18,10 +23,18 @@ export default async function handler(request, response) {
     }
 
     try {
-        const ip = request.headers['x-forwarded-for'] || '127.0.0.1';
-        const { success } = await ratelimit.limit(ip);
+        const redis = await connectRedis();
 
-        if (!success) {
+        const ip = request.headers['x-forwarded-for'] || '127.0.0.1';
+        const rateLimitKey = `ratelimit:${ip}`;
+
+        const requests = await redis.incr(rateLimitKey);
+
+        if (requests === 1) {
+            await redis.expire(rateLimitKey, 3600);
+        }
+
+        if (requests > 5) {
             return response.status(429).json({ error: 'Too many requests' });
         }
 
@@ -34,7 +47,9 @@ export default async function handler(request, response) {
         const id = nanoid(10);
         const key = `wish:${id}`;
 
-        await redis.set(key, { name, description }, { ex: 259200 });
+        await redis.set(key, JSON.stringify({ name, description }), {
+            EX: 259200
+        });
 
         return response.status(200).json({ id });
     } catch (error) {

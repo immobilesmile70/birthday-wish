@@ -1,9 +1,20 @@
-import { Redis } from '@upstash/redis';
+import { createClient } from 'redis';
 
-const redis = new Redis({
-    url: process.env.KV_REST_API_URL,
-    token: process.env.KV_REST_API_TOKEN,
+const client = createClient({
+    url: process.env.REDIS_URL
 });
+
+client.on('error', (err) => console.log('Redis Client Error', err));
+
+let isConnected = false;
+
+async function connectRedis() {
+    if (!isConnected) {
+        await client.connect();
+        isConnected = true;
+    }
+    return client;
+}
 
 export default async function handler(request, response) {
     if (request.method !== 'GET') {
@@ -17,11 +28,14 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: 'ID is required' });
         }
 
-        const data = await redis.get(`wish:${id}`);
+        const redis = await connectRedis();
+        const dataString = await redis.get(`wish:${id}`);
 
-        if (!data) {
+        if (!dataString) {
             return response.status(404).json({ error: 'Wish not found or expired' });
         }
+
+        const data = JSON.parse(dataString);
 
         return response.status(200).json(data);
     } catch (error) {
