@@ -11,11 +11,11 @@ const throbberHTML = `<svg stroke="var(--primary)" viewBox="0 0 24 24" xmlns="ht
 const app = document.getElementById('router-view');
 
 const cachedAudio = new Audio('/wish.mp3');
-cachedAudio.volume = 0.5;
+cachedAudio.volume = 0.6;
 cachedAudio.preload = 'auto';
 
 let lastCelebrationTime = 0;
-const CELEBRATION_COOLDOWN_MS = 2000;
+const CELEBRATION_COOLDOWN_MS = 5000;
 
 async function init() {
     const params = new URLSearchParams(window.location.search);

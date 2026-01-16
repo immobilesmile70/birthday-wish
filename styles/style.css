@@ -30,6 +30,7 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  will-change: background;
   -moz-user-select: none;
   -webkit-user-select: none;
   user-select: none;
