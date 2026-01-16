@@ -1,5 +1,4 @@
 import { createClient } from 'redis';
-import { nanoid } from 'nanoid';
 
 const client = createClient({
     url: process.env.REDIS_URL
@@ -44,6 +43,7 @@ export default async function handler(request, response) {
             return response.status(400).json({ error: 'Name and description are required' });
         }
 
+        const { nanoid } = await import('nanoid');
         const id = nanoid(10);
         const key = `wish:${id}`;
 
