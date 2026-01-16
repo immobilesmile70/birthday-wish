@@ -10,6 +10,13 @@ const throbberHTML = `<svg stroke="var(--primary)" viewBox="0 0 24 24" xmlns="ht
 
 const app = document.getElementById('router-view');
 
+const cachedAudio = new Audio('/wish.mp3');
+cachedAudio.volume = 0.5;
+cachedAudio.preload = 'auto';
+
+let lastCelebrationTime = 0;
+const CELEBRATION_COOLDOWN_MS = 2000;
+
 async function init() {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('id');
@@ -104,7 +111,7 @@ function renderCreateMode() {
                     
                     <div class="input-group">
                         <label class="input-label" for="param-sender">Your Name</label>
-                        <input type="text" id="param-sender" class="form-input" placeholder="e.g. John" required>
+                        <input type="text" id="param-sender" class="form-input" placeholder="e.g. Shourya" required>
                     </div>
 
                     <button type="submit" id="submit-btn" class="btn primary" style="width: 100%;">
@@ -128,7 +135,7 @@ function renderCreateMode() {
         if (!name || !description || !sender) return;
 
         submitBtn.disabled = true;
-        btnText.textContent = `${throbberHTML} Generating...`;
+        btnText.innerHTML = `${throbberHTML} Generating...`;
 
         try {
             const res = await fetch('/api/create-wish', {
@@ -179,10 +186,6 @@ function renderViewMode(name, description, sender) {
                         </div>
                     </div>
                 </div>
-                
-                 <div style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
-                    <a href="/" style="color: inherit; text-decoration: none; border-bottom: 1px dashed currentColor;">Create your own wish</a>
-                </div>
             </div>
         </div>
     `;
@@ -194,8 +197,17 @@ function setupInteractions() {
     const celebrateBtn = document.getElementById('celebrate-btn');
     if (celebrateBtn) {
         celebrateBtn.addEventListener('click', () => {
+            const now = Date.now();
+
+            if (now - lastCelebrationTime < CELEBRATION_COOLDOWN_MS) {
+                console.log('Celebration cooldown active. Please wait before celebrating again.');
+                return;
+            }
+
             triggerConfetti();
             playMusic();
+
+            lastCelebrationTime = now;
 
             celebrateBtn.style.transform = 'scale(0.95)';
             setTimeout(() => celebrateBtn.style.transform = '', 100);
@@ -255,9 +267,8 @@ function triggerConfetti() {
 }
 
 function playMusic() {
-    const audio = new Audio('/wish.mp3');
-    audio.volume = 0.5;
-    audio.play().catch(err => {
+    cachedAudio.currentTime = 0;
+    cachedAudio.play().catch(err => {
         console.log("Audio autoplay blocked or file missing:", err);
     });
 }
