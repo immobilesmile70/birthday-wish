@@ -33,7 +33,7 @@ export default async function handler(request, response) {
             await redis.expire(rateLimitKey, 3600);
         }
 
-        if (requests > 5) {
+        if (requests > 3) {
             return response.status(429).json({ error: 'Too many requests' });
         }
 
@@ -41,6 +41,10 @@ export default async function handler(request, response) {
 
         if (!name || !description || !sender) {
             return response.status(400).json({ error: 'Name, description, and sender are required' });
+        }
+
+        if (name.length > 50 || description.length > 1200 || sender.length > 50) {
+            return response.status(400).json({ error: 'Input exceeds maximum allowed length' });
         }
 
         const { nanoid } = await import('nanoid');

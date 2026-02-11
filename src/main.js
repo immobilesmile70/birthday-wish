@@ -101,17 +101,17 @@ function renderCreateMode() {
                 <form id="create-form">
                     <div class="input-group">
                         <label class="input-label" for="param-name">Their Name</label>
-                        <input type="text" id="param-name" class="form-input" placeholder="e.g. Rick" required>
+                        <input type="text" id="param-name" maxlength="50" class="form-input" placeholder="e.g. Rick" required>
                     </div>
                     
                     <div class="input-group">
                         <label class="input-label" for="param-desc">Your Message</label>
-                        <textarea id="param-desc" class="form-textarea" placeholder="Write something heartfelt..." required></textarea>
+                        <textarea id="param-desc" class="form-textarea" placeholder="Write something heartfelt..." maxlength="1200" required></textarea>
                     </div>
                     
                     <div class="input-group">
                         <label class="input-label" for="param-sender">Your Name</label>
-                        <input type="text" id="param-sender" class="form-input" placeholder="e.g. Shourya" required>
+                        <input type="text" id="param-sender" maxlength="50" class="form-input" placeholder="e.g. Shourya" required>
                     </div>
 
                     <button type="submit" id="submit-btn" class="btn primary" style="width: 100%;">
@@ -132,6 +132,11 @@ function renderCreateMode() {
         const sender = document.getElementById('param-sender').value.trim();
 
         if (!name || !description || !sender) return;
+
+        if(name.length > 50 || description.length > 1200 || sender.length > 50) {
+            alert('Input exceeds maximum allowed length.');
+            return;
+        }
 
         submitBtn.disabled = true;
         btnText.innerHTML = `<div class="loading-spinner" style="width: 20px; height: 20px;">${throbberHTML}</div> Generating...`;
