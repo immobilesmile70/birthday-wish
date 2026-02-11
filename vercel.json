@@ -2,6 +2,12 @@
   "cleanUrls": true,
   "framework": "vite",
   "rewrites": [
+    { "src": "/sitemap.xml", "dest": "/api/sitemap" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/robots.txt", "dest": "/robots.txt" },
+    { "src": "/site.webmanifest", "dest": "/manifest.json" },
+    { "src": "/manifest.json", "dest": "/manifest.json" },
+    { "src": "/manifest", "dest": "/manifest.json" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
