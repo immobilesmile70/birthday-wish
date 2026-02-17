@@ -172,7 +172,6 @@ function renderViewMode(name, description, sender) {
                 <div class="actions">
                     <button id="celebrate-btn" class="btn primary">
                         <span class="btn-text">Make a Wish</span>
-                        <div class="btn-glow"></div>
                     </button>
                 </div>
 
