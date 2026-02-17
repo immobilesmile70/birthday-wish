@@ -83,7 +83,6 @@ function renderError(message) {
                 <p class="message">${message}</p>
                 <button onclick="window.location.href='/'" class="btn primary" style="margin-top: 2rem;">
                     <span class="btn-text">Create a New Wish</span>
-                    <div class="btn-glow"></div>
                 </button>
             </div>
         </div>
@@ -115,7 +114,7 @@ function renderCreateMode() {
                     </div>
 
                     <button type="submit" id="submit-btn" class="btn primary" style="width: 100%;">
-                        <span class="btn-text">Generate Wish Link</span>
+                        Generate Wish Link
                     </button>
                 </form>
             </div>
@@ -125,7 +124,6 @@ function renderCreateMode() {
     document.getElementById('create-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitBtn = document.getElementById('submit-btn');
-        const btnText = submitBtn.querySelector('.btn-text');
 
         const name = document.getElementById('param-name').value.trim();
         const description = document.getElementById('param-desc').value.trim();
@@ -139,7 +137,7 @@ function renderCreateMode() {
         }
 
         submitBtn.disabled = true;
-        btnText.innerHTML = `<div class="loading-spinner" style="width: 20px; height: 20px;">${throbberHTML}</div> Generating...`;
+        submitBtn.innerHTML = `<div class="loading-spinner" style="width: 20px; height: 20px;">${throbberHTML}</div> Generating...`;
 
         try {
             const res = await fetch('/api/create-wish', {
@@ -159,7 +157,7 @@ function renderCreateMode() {
             console.error(err);
             alert(err.message || 'Something went wrong');
             submitBtn.disabled = false;
-            btnText.textContent = 'Generate Wish Link';
+            submitBtn.textContent = 'Generate Wish Link';
         }
     });
 }
